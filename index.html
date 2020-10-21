@@ -1,82 +1,81 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="index.css">
 		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.2.4/foundation.min.css">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.3/vue.js"></script>
-    </head>
-    <body>
-        <div id="app">
-            <task-list :tasks="tasks"></task-list>
-          </div>
+  </head>
+  <body>
+    <div id="app">
+      <task-list :tasks="tasks"></task-list>
+    </div>
           
-          <template id="task-list">
-              <section class="tasks">
-                <h1>
-                  Tasks 
-                  <transition name="fade">
-                    <small v-if="incomplete">({{ incomplete }})</small>
-                  </transition>
-                  
-                </h1>
-                <div class="tasks__new input-group">
-                  <input type="text"
-                         class="input-group-field"
-                         v-model="newTask"
-                         @keyup.enter="addTask"
-                         placeholder="New task"
-                  >
-                  <span class="input-group-button">
-                    <button @click="addTask" 
-                            class="button"
-                    >
-                      <i class="fa fa-plus"></i> Add
-                    </button>
-                  </span>
-                </div>
+    <template id="task-list">
+      <section class="tasks">
+        <h1>
+          Tasks 
+          <transition name="fade">
+            <small v-if="incomplete">({{ incomplete }})</small>
+          </transition>
+        </h1>
+        <div class="tasks__new input-group">
+          <input type="text"
+                 class="input-group-field"
+                 v-model="newTask"
+                 @keyup.enter="addTask"
+                 placeholder="New task"
+          >
+          <span class="input-group-button">
+            <button @click="addTask" 
+                    class="button"
+            >
+              <i class="fa fa-plus"></i> Add
+            </button>
+          </span>
+				</div>
+				
+        <div class="tasks__clear button-group pull-right">
+          <button class="button warning small"
+                  @click="clearCompleted"
+          >
+            <i class="fa fa-check"></i> Clear Completed
+          </button>
+          <button class="button alert small"
+                  @click="clearAll"
+          >
+            <i class="fa fa-trash"></i> Clear All
+          </button>
+        </div>
+        
+        <transition-group name="fade" tag="ul" class="tasks__list no-bullet">
+          <task-item v-for="(task, index) in tasks"
+                     @remove="removeTask(index)"
+                     @complete="completeTask(task)"
+                     :task="task"
+                     :key="task"
+          ></task-item>
+        </transition-group>
+      </section>
+    </template>
           
-                <div class="tasks__clear button-group pull-right">
-                  <button class="button warning small"
-                          @click="clearCompleted"
-                  >
-                    <i class="fa fa-check"></i> Clear Completed
-                  </button>
-                  <button class="button alert small"
-                          @click="clearAll"
-                  >
-                    <i class="fa fa-trash"></i> Clear All
-                  </button>
-                </div>
-                
-                <transition-group name="fade" tag="ul" class="tasks__list no-bullet">
-                    <task-item v-for="(task, index) in tasks"
-                               @remove="removeTask(index)"
-                               @complete="completeTask(task)"
-                               :task="task"
-                               :key="task"
-                    ></task-item>
-                </transition-group>
-              </section>
-          </template>
-          
-          <template id="task-item">
-              <li class="tasks__item">
-                <button :class="className"
-                    @click.self="$emit('complete')"
-                >
-                  {{ task.title }}
-                </button>
-                <button class="tasks__item__remove button alert pull-right"
-                        @click="$emit('remove')"
-                >
-                  <i class="fa fa-times"></i>
-                </button>
-              </li>
-          </template>
-          <script src="./index.js"></script>
-    </body>
+    <template id="task-item">
+    	<li class="tasks__item">
+    	  <button :class="className"
+    	    @click.self="$emit('complete')"
+    	  >
+    	    {{ task.title }}
+    	  </button>
+    	  <button class="tasks__item__remove button alert pull-right"
+    	    @click="$emit('remove')"
+    	  >
+    	    <i class="fa fa-times"></i>
+    	  </button>
+    	</li>
+    </template>
+  	<script src="./index.js"></script>
+  </body>
 </html>
